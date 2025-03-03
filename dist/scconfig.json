@@ -1,0 +1,8 @@
+{
+    "name": "@scom/page-form",
+    "type": "widget",
+    "version": "0.1.0",
+    "dependencies": [
+        "@ijstech/components"
+    ]
+}
