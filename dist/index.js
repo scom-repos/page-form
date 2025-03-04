@@ -277,7 +277,7 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
     };
     ScomPageForm = __decorate([
         components_2.customModule,
-        (0, components_2.customElements)('i-scom-page-form')
+        (0, components_2.customElements)('i-page-form')
     ], ScomPageForm);
     exports.default = ScomPageForm;
 });

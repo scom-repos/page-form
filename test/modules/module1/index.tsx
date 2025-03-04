@@ -33,7 +33,7 @@ export default class Module1 extends Module {
 
     render() {
         return <i-panel margin={{ left: '1rem', top: '1rem' }}>
-            <i-scom-page-form
+            <i-page-form
                 id="el"
                 title="CONTACT US"
                 dataSchema={{

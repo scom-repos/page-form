@@ -105,7 +105,7 @@ declare module "@scom/page-form" {
     global {
         namespace JSX {
             interface IntrinsicElements {
-                ["i-scom-page-form"]: ScomPageFormElement;
+                ["i-page-form"]: ScomPageFormElement;
             }
         }
     }

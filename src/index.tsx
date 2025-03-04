@@ -35,13 +35,13 @@ interface ScomPageFormElement extends ControlElement {
 declare global {
   namespace JSX {
     interface IntrinsicElements {
-      ["i-scom-page-form"]: ScomPageFormElement;
+      ["i-page-form"]: ScomPageFormElement;
     }
   }
 }
 
 @customModule
-@customElements('i-scom-page-form')
+@customElements('i-page-form')
 export default class ScomPageForm extends Module {
   private form: Form;
   private lblTitle: Label;
