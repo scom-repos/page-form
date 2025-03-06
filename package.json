@@ -17,8 +17,6 @@
   "devDependencies": {
     "@ijstech/cli": "^0.1.26",
     "@ijstech/compiler": "^0.1.18",
-    "@ijstech/components": "^0.1.29",
-    "@scom/ton-core": "latest",
-    "@ijstech/ton-core": "latest"
+    "@ijstech/components": "^0.1.29"
   }
 }
