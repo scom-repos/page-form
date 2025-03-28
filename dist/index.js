@@ -265,6 +265,9 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 if (dataSchema)
                     this.setData({ title, dataSchema, uiSchema, recaptchaKey });
             }
+            const tag = this.getAttribute('tag', true);
+            if (tag)
+                this.model.setTag(tag);
         }
         render() {
             return (this.$render("i-vstack", { width: "100%", gap: '1.5rem', border: { width: '1px', style: 'solid', color: Theme.divider }, padding: { top: '1.25rem', left: '1.25rem', right: '1.25rem', bottom: '1.25rem' } },
@@ -277,7 +280,36 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
     };
     ScomPageForm = __decorate([
         components_2.customModule,
-        (0, components_2.customElements)('i-page-form')
+        (0, components_2.customElements)('i-page-form', {
+            icon: 'stop',
+            props: {
+                title: {
+                    type: 'string'
+                },
+                dataSchema: {
+                    type: 'object'
+                },
+                uiSchema: {
+                    type: 'object'
+                },
+                recaptchaKey: {
+                    type: 'string'
+                }
+            },
+            className: 'ScomPageForm',
+            events: {},
+            dataSchema: {
+                type: 'object',
+                properties: {
+                    title: {
+                        type: 'string'
+                    },
+                    recaptchaKey: {
+                        type: 'string'
+                    }
+                }
+            }
+        })
     ], ScomPageForm);
     exports.default = ScomPageForm;
 });

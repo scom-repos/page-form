@@ -41,7 +41,36 @@ declare global {
 }
 
 @customModule
-@customElements('i-page-form')
+@customElements('i-page-form', {
+  icon: 'stop',
+  props: {
+    title: {
+      type: 'string'
+    },
+    dataSchema: {
+      type: 'object'
+    },
+    uiSchema: {
+      type: 'object'
+    },
+    recaptchaKey: {
+      type: 'string'
+    }
+  },
+  className: 'ScomPageForm',
+  events: {},
+  dataSchema: {
+    type: 'object',
+    properties: {
+      title: {
+        type: 'string'
+      },
+      recaptchaKey: {
+        type: 'string'
+      }
+    }
+  }
+})
 export default class ScomPageForm extends Module {
   private form: Form;
   private lblTitle: Label;
@@ -160,6 +189,9 @@ export default class ScomPageForm extends Module {
       const recaptchaKey = this.getAttribute('recaptchaKey', true);
       if (dataSchema) this.setData({ title, dataSchema, uiSchema, recaptchaKey });
     }
+
+    const tag = this.getAttribute('tag', true);
+    if (tag) this.model.setTag(tag);
   }
 
   render() {
