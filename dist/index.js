@@ -137,28 +137,38 @@ define("@scom/page-form/index.css.ts", ["require", "exports", "@ijstech/componen
     exports.getFormStyle = void 0;
     const Theme = components_1.Styles.Theme.ThemeVars;
     const getFormStyle = (tag) => {
-        const { labelFontSize = Theme.typography.fontSize, inputFontSize = Theme.typography.fontSize, inputHeight = 42, inputTransform = 'none', titleTransform = 'none', inputBorderRadius = 0, inputPadding = '0.5rem 1rem' } = tag;
+        const { label, input } = tag;
         return components_1.Styles.style({
             $nest: {
                 'i-label': {
-                    fontSize: labelFontSize,
-                    textTransform: titleTransform
+                    fontSize: label?.font?.size || Theme.typography.fontSize,
+                    color: label?.font?.color || Theme.colors.primary.main,
+                    textTransform: (label?.font?.transform || 'none'),
+                    display: label?.visible ? 'block' : 'none'
                 },
                 'i-input': {
-                    borderRadius: inputBorderRadius,
+                    borderRadius: input?.border?.radius,
+                    borderWidth: input?.border?.width,
+                    borderStyle: input?.border?.style,
+                    borderColor: input?.border?.color
                 },
                 'i-input > input': {
-                    fontSize: inputFontSize,
-                    height: `${inputHeight} !important`,
-                    textTransform: inputTransform,
+                    fontSize: input?.font?.size || Theme.typography.fontSize,
+                    height: `${input?.height || 42}px`,
+                    textTransform: (input?.font?.transform || 'none'),
                     borderRadius: 'inherit',
-                    padding: inputPadding
+                    padding: input?.padding || '0.5rem 1rem',
+                    fontStyle: input?.font?.style || 'inherit'
                 },
                 'i-input > textarea': {
-                    fontSize: inputFontSize,
-                    textTransform: inputTransform,
+                    fontSize: input?.font?.size || Theme.typography.fontSize,
+                    textTransform: (input?.font?.transform || 'none'),
                     borderRadius: 'inherit',
-                    padding: inputPadding
+                    padding: input?.padding || '0.5rem 1rem',
+                    fontStyle: input?.font?.style || 'inherit'
+                },
+                "> i-hstack": {
+                    padding: '0 !important'
                 }
             }
         });
@@ -185,9 +195,18 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             return this.model.getConfigurators();
         }
         onUpdateBlock() {
-            const { titleFontSize = Theme.typography.fontSize } = this.model.tag;
+            const { title: titleStyle, border, direction, maxWidth, margin, padding } = this.model.tag;
             this.lblTitle.caption = this.model.title;
-            this.lblTitle.font = { weight: 600, size: titleFontSize };
+            this.lblTitle.font = titleStyle?.font || { weight: 600, size: Theme.typography.fontSize };
+            if (border)
+                this.pnlWrapper.border = border;
+            else
+                this.pnlWrapper.border = { width: '0px' };
+            this.pnlWrapper.padding = padding || { top: '1.25rem', left: '1.25rem', right: '1.25rem', bottom: '1.25rem' };
+            if (margin)
+                this.pnlWrapper.margin = margin;
+            this.maxWidth = maxWidth || '100%';
+            this.pnlForm.direction = direction || 'vertical';
             this.form.clearFormData();
             if (this.model.uiSchema)
                 this.form.uiSchema = this.model.uiSchema;
@@ -218,12 +237,12 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
         }
         onUpdateTheme() {
-            const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
-            this.updateStyle('--text-primary', this.model.tag[themeVar]?.titleColor);
-            this.updateStyle('--colors-primary-main', this.model.tag[themeVar]?.buttonBackgroundColor);
-            this.updateStyle('--colors-primary-contrast_text', this.model.tag[themeVar]?.buttonColor);
-            this.updateStyle('--input-background', this.model.tag[themeVar]?.inputBackgroundColor);
-            this.updateStyle('--input-font_color', this.model.tag[themeVar]?.inputColor);
+            // const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
+            this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
+            this.updateStyle('--colors-primary-main', this.model.tag?.button?.background?.color);
+            this.updateStyle('--colors-primary-contrast_text', this.model.tag?.button?.font?.color);
+            this.updateStyle('--input-background', this.model.tag?.input?.background?.color);
+            this.updateStyle('--input-font_color', this.model.tag?.input?.font?.color);
             if (this.formStyle)
                 this.form.classList.remove(this.formStyle);
             this.formStyle = (0, index_css_1.getFormStyle)(this.model.tag);
@@ -270,12 +289,13 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 this.model.setTag(tag);
         }
         render() {
-            return (this.$render("i-vstack", { width: "100%", gap: '1.5rem', border: { width: '1px', style: 'solid', color: Theme.divider }, padding: { top: '1.25rem', left: '1.25rem', right: '1.25rem', bottom: '1.25rem' } },
+            return (this.$render("i-vstack", { id: "pnlWrapper", width: "100%", gap: '1.5rem' },
                 this.$render("i-label", { id: "lblTitle", font: { weight: 600 } }),
-                this.$render("i-form", { id: "form", width: "100%" }),
-                this.$render("i-hstack", { verticalAlignment: 'center', gap: '1rem', horizontalAlignment: 'space-between' },
-                    this.$render("i-panel", { id: "pnlRecaptcha" }),
-                    this.$render("i-button", { id: "btnSubmit", font: { weight: 600, color: Theme.colors.primary.contrastText }, background: { color: Theme.colors.primary.main }, padding: { top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem' }, caption: "Submit" }))));
+                this.$render("i-stack", { id: "pnlForm", width: "100%" },
+                    this.$render("i-form", { id: "form", width: "100%" }),
+                    this.$render("i-hstack", { verticalAlignment: 'center', gap: '1rem', horizontalAlignment: 'space-between' },
+                        this.$render("i-panel", { id: "pnlRecaptcha" }),
+                        this.$render("i-button", { id: "btnSubmit", font: { weight: 600, color: Theme.colors.primary.contrastText }, background: { color: Theme.colors.primary.main }, padding: { top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem' }, caption: "Submit" })))));
         }
     };
     ScomPageForm = __decorate([
