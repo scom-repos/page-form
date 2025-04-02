@@ -10,7 +10,8 @@ import {
   Styles,
   Label,
   Button,
-  Panel
+  Panel,
+  StackLayout
 } from '@ijstech/components';
 import { IConfig } from './interface';
 import { Model } from './model/index';
@@ -76,6 +77,8 @@ export default class ScomPageForm extends Module {
   private lblTitle: Label;
   private pnlRecaptcha: Panel;
   private btnSubmit: Button;
+  private pnlWrapper: Panel;
+  private pnlForm: StackLayout;
 
   private model: Model;
   private formStyle: string;
@@ -100,11 +103,23 @@ export default class ScomPageForm extends Module {
 
   private onUpdateBlock() {
     const {
-      titleFontSize = Theme.typography.fontSize
+      title: titleStyle,
+      border,
+      direction,
+      maxWidth,
+      margin,
+      padding
     } = this.model.tag;
 
     this.lblTitle.caption = this.model.title;
-    this.lblTitle.font = {weight: 600, size: titleFontSize};
+    this.lblTitle.font = titleStyle?.font || {weight: 600, size: Theme.typography.fontSize};
+  
+    if (border) this.pnlWrapper.border = border;
+    else this.pnlWrapper.border = {width: '0px'};
+    this.pnlWrapper.padding = padding || {top: '1.25rem', left: '1.25rem', right: '1.25rem', bottom: '1.25rem'};
+    if (margin) this.pnlWrapper.margin = margin;
+    this.maxWidth = maxWidth || '100%';
+    this.pnlForm.direction = direction || 'vertical';
 
     this.form.clearFormData();
     if (this.model.uiSchema)
@@ -139,12 +154,12 @@ export default class ScomPageForm extends Module {
   }
 
   private onUpdateTheme() {
-    const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
-    this.updateStyle('--text-primary', this.model.tag[themeVar]?.titleColor);
-    this.updateStyle('--colors-primary-main', this.model.tag[themeVar]?.buttonBackgroundColor);
-    this.updateStyle('--colors-primary-contrast_text', this.model.tag[themeVar]?.buttonColor);
-    this.updateStyle('--input-background', this.model.tag[themeVar]?.inputBackgroundColor);
-    this.updateStyle('--input-font_color', this.model.tag[themeVar]?.inputColor);
+    // const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
+    this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
+    this.updateStyle('--colors-primary-main', this.model.tag?.button?.background?.color);
+    this.updateStyle('--colors-primary-contrast_text', this.model.tag?.button?.font?.color);
+    this.updateStyle('--input-background', this.model.tag?.input?.background?.color);
+    this.updateStyle('--input-font_color', this.model.tag?.input?.font?.color);
 
     if (this.formStyle) this.form.classList.remove(this.formStyle);
     this.formStyle = getFormStyle(this.model.tag);
@@ -197,23 +212,24 @@ export default class ScomPageForm extends Module {
   render() {
     return (
       <i-vstack
+        id="pnlWrapper"
         width="100%"
         gap={'1.5rem'}
-        border={{width: '1px', style: 'solid', color: Theme.divider}}
-        padding={{top: '1.25rem', left: '1.25rem', right: '1.25rem', bottom: '1.25rem'}}
       >
         <i-label id="lblTitle" font={{weight: 600}} />
-        <i-form id="form" width="100%" />
-        <i-hstack verticalAlignment='center' gap={'1rem'} horizontalAlignment='space-between'>
-          <i-panel id="pnlRecaptcha" />
-          <i-button
-            id="btnSubmit"
-            font={{weight: 600, color: Theme.colors.primary.contrastText}}
-            background={{color: Theme.colors.primary.main}}
-            padding={{top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem'}}
-            caption="Submit"
-          />
-        </i-hstack>
+        <i-stack id="pnlForm" width="100%">
+          <i-form id="form" width="100%" />
+          <i-hstack verticalAlignment='center' gap={'1rem'} horizontalAlignment='space-between'>
+            <i-panel id="pnlRecaptcha" />
+            <i-button
+              id="btnSubmit"
+              font={{weight: 600, color: Theme.colors.primary.contrastText}}
+              background={{color: Theme.colors.primary.main}}
+              padding={{top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem'}}
+              caption="Submit"
+            />
+          </i-hstack>
+        </i-stack>
       </i-vstack>
     )
   }

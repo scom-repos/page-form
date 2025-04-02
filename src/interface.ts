@@ -1,4 +1,4 @@
-import { IDataSchema, IUISchema } from "@ijstech/components";
+import { IDataSchema, IUISchema, IBorder, IFont, ISpace } from "@ijstech/components";
 
 export interface IConfig {
   title?: string;
@@ -7,25 +7,31 @@ export interface IConfig {
   recaptchaKey?: string;
 }
 
+interface IStyles {
+  font?: IFont;
+  border?: IBorder;
+  width?: string|number;
+  height?: string|number;
+  padding?: string;
+  background?: {color?: string};
+  visible?: boolean;
+}
+
 export interface ISettings {
   light?: IColors;
   dark?: IColors;
-  titleFontSize?: string;
-  inputFontSize?: string;
-  labelFontSize?: string;
-  inputHeight?: string;
-  inputTransform?: TextTransform;
-  inputBorderRadius?: string | number;
-  inputPadding?: string;
-  titleTransform?: TextTransform;
+  border?: IBorder;
+  direction?: 'vertical'|'horizontal';
+  maxWidth?: string|number;
+  margin?: ISpace;
+  padding?: ISpace;
+  title?: IStyles;
+  input?: IStyles;
+  label?: IStyles;
+  button?: IStyles;
 }
 
 export type TextTransform = 'capitalize'|'uppercase'|'lowercase'|'unset'|'inherit'|'initial'|'none';
 
 export interface IColors {
-  titleColor?: string;
-  inputColor?: string;
-  inputBackgroundColor?: string;
-  buttonBackgroundColor?: string;
-  buttonColor?: string;
 }
