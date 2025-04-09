@@ -144,7 +144,8 @@ define("@scom/page-form/index.css.ts", ["require", "exports", "@ijstech/componen
                     fontSize: label?.font?.size || Theme.typography.fontSize,
                     color: label?.font?.color || Theme.colors.primary.main,
                     textTransform: (label?.font?.transform || 'none'),
-                    display: label?.visible ? 'block' : 'none'
+                    display: label?.visible === false ? 'none' : 'block',
+                    fontWeight: label?.font?.bold ? 700 : (label?.font?.weight || '400')
                 },
                 'i-input': {
                     borderRadius: input?.border?.radius,
@@ -188,14 +189,38 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
         constructor(parent, options) {
             super(parent, options);
         }
+        get dataSchema() {
+            return this.model.dataSchema;
+        }
+        set dataSchema(value) {
+            this.model.dataSchema = value;
+        }
+        get uiSchema() {
+            return this.model.uiSchema;
+        }
+        set uiSchema(value) {
+            this.model.uiSchema = value;
+        }
+        get recaptchaKey() {
+            return this.model.recaptchaKey;
+        }
+        set recaptchaKey(value) {
+            this.model.recaptchaKey = value;
+        }
+        get title() {
+            return this.model.title;
+        }
+        set title(value) {
+            this.model.title = value;
+        }
         async setData(data) {
-            this.model.setData(data);
+            await this.model.setData(data);
         }
         getConfigurators() {
             return this.model.getConfigurators();
         }
         onUpdateBlock() {
-            const { title: titleStyle, border, direction, maxWidth, margin, padding } = this.model.tag;
+            const { title: titleStyle, border, direction = 'vertical', maxWidth, margin, padding } = this.model.tag;
             this.lblTitle.caption = this.model.title;
             this.lblTitle.font = titleStyle?.font || { weight: 600, size: Theme.typography.fontSize };
             if (border)
@@ -206,7 +231,8 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             if (margin)
                 this.pnlWrapper.margin = margin;
             this.maxWidth = maxWidth || '100%';
-            this.pnlForm.direction = direction || 'vertical';
+            this.pnlForm.direction = direction;
+            this.btnSubmit.margin = direction === 'vertical' ? { top: '20px' } : { top: '0px' };
             this.form.clearFormData();
             if (this.model.uiSchema)
                 this.form.uiSchema = this.model.uiSchema;
@@ -237,7 +263,6 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
         }
         onUpdateTheme() {
-            // const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
             this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
             this.updateStyle('--colors-primary-main', this.model.tag?.button?.background?.color);
             this.updateStyle('--colors-primary-contrast_text', this.model.tag?.button?.font?.color);
@@ -269,7 +294,7 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 });
             };
         }
-        init() {
+        async init() {
             super.init();
             this.model = new index_1.Model({
                 onUpdateBlock: this.onUpdateBlock.bind(this),
@@ -281,8 +306,7 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 const dataSchema = this.getAttribute('dataSchema', true);
                 const uiSchema = this.getAttribute('uiSchema', true);
                 const recaptchaKey = this.getAttribute('recaptchaKey', true);
-                if (dataSchema)
-                    this.setData({ title, dataSchema, uiSchema, recaptchaKey });
+                await this.setData({ title, dataSchema, uiSchema, recaptchaKey });
             }
             const tag = this.getAttribute('tag', true);
             if (tag)

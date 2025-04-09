@@ -93,8 +93,36 @@ export default class ScomPageForm extends Module {
     super(parent, options);
   }
 
+  get dataSchema() {
+    return this.model.dataSchema;
+  }
+  set dataSchema(value: IDataSchema) {
+    this.model.dataSchema = value;
+  }
+
+  get uiSchema() {
+    return this.model.uiSchema;
+  }
+  set uiSchema(value: IUISchema) {
+    this.model.uiSchema = value;
+  }
+
+  get recaptchaKey() {
+    return this.model.recaptchaKey;
+  }
+  set recaptchaKey(value: string) {
+    this.model.recaptchaKey = value;
+  }
+
+  get title() {
+    return this.model.title;
+  }
+  set title(value: string) {
+    this.model.title = value;
+  }
+
   private async setData(data: IConfig) {
-    this.model.setData(data);
+    await this.model.setData(data);
   }
 
   getConfigurators() {
@@ -105,7 +133,7 @@ export default class ScomPageForm extends Module {
     const {
       title: titleStyle,
       border,
-      direction,
+      direction = 'vertical',
       maxWidth,
       margin,
       padding
@@ -119,7 +147,8 @@ export default class ScomPageForm extends Module {
     this.pnlWrapper.padding = padding || {top: '1.25rem', left: '1.25rem', right: '1.25rem', bottom: '1.25rem'};
     if (margin) this.pnlWrapper.margin = margin;
     this.maxWidth = maxWidth || '100%';
-    this.pnlForm.direction = direction || 'vertical';
+    this.pnlForm.direction = direction;
+    this.btnSubmit.margin = direction === 'vertical' ? {top: '20px'} : {top: '0px'};
 
     this.form.clearFormData();
     if (this.model.uiSchema)
@@ -154,7 +183,6 @@ export default class ScomPageForm extends Module {
   }
 
   private onUpdateTheme() {
-    // const themeVar = document.body.style.getPropertyValue('--theme') || 'dark';
     this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
     this.updateStyle('--colors-primary-main', this.model.tag?.button?.background?.color);
     this.updateStyle('--colors-primary-contrast_text', this.model.tag?.button?.font?.color);
@@ -190,7 +218,7 @@ export default class ScomPageForm extends Module {
     }
   }
 
-  init() {
+  async init() {
     super.init();
     this.model = new Model({
       onUpdateBlock: this.onUpdateBlock.bind(this),
@@ -202,7 +230,7 @@ export default class ScomPageForm extends Module {
       const dataSchema = this.getAttribute('dataSchema', true);
       const uiSchema = this.getAttribute('uiSchema', true);
       const recaptchaKey = this.getAttribute('recaptchaKey', true);
-      if (dataSchema) this.setData({ title, dataSchema, uiSchema, recaptchaKey });
+      await this.setData({ title, dataSchema, uiSchema, recaptchaKey });
     }
 
     const tag = this.getAttribute('tag', true);
