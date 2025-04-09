@@ -15,7 +15,8 @@ export const getFormStyle = (tag: ISettings) => {
         fontSize: label?.font?.size || Theme.typography.fontSize,
         color: label?.font?.color || Theme.colors.primary.main,
         textTransform: (label?.font?.transform || 'none') as TextTransform,
-        display: label?.visible ? 'block' : 'none'
+        display: label?.visible === false ? 'none' : 'block',
+        fontWeight: label?.font?.bold ? 700 : (label?.font?.weight || '400')
       },
       'i-input': {
         borderRadius: input?.border?.radius,

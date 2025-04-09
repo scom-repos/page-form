@@ -127,6 +127,14 @@ declare module "@scom/page-form" {
         private formStyle;
         static create(options?: ScomPageFormElement, parent?: Container): Promise<ScomPageForm>;
         constructor(parent?: Container, options?: ScomPageFormElement);
+        get dataSchema(): IDataSchema;
+        set dataSchema(value: IDataSchema);
+        get uiSchema(): IUISchema;
+        set uiSchema(value: IUISchema);
+        get recaptchaKey(): string;
+        set recaptchaKey(value: string);
+        get title(): string;
+        set title(value: string);
         private setData;
         getConfigurators(): ({
             name: string;
@@ -155,7 +163,7 @@ declare module "@scom/page-form" {
         private updateStyle;
         private onUpdateTheme;
         private addLib;
-        init(): void;
+        init(): Promise<void>;
         render(): any;
     }
 }
