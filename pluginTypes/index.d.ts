@@ -6,6 +6,7 @@ declare module "@scom/page-form/interface.ts" {
         dataSchema: IDataSchema;
         uiSchema?: IUISchema;
         recaptchaKey?: string;
+        buttonCaption?: string;
     }
     interface IStyles {
         font?: IFont;
@@ -56,6 +57,8 @@ declare module "@scom/page-form/model/index.ts" {
         set uiSchema(value: IUISchema);
         get recaptchaKey(): string;
         set recaptchaKey(value: string);
+        get buttonCaption(): string;
+        set buttonCaption(value: string);
         get tag(): ISettings;
         set tag(value: ISettings);
         private getData;
@@ -135,6 +138,8 @@ declare module "@scom/page-form" {
         set recaptchaKey(value: string);
         get title(): string;
         set title(value: string);
+        get buttonCaption(): string;
+        set buttonCaption(value: string);
         private setData;
         getConfigurators(): ({
             name: string;

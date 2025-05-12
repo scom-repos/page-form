@@ -49,6 +49,12 @@ define("@scom/page-form/model/index.ts", ["require", "exports"], function (requi
         set recaptchaKey(value) {
             this._data.recaptchaKey = value;
         }
+        get buttonCaption() {
+            return this._data.buttonCaption;
+        }
+        set buttonCaption(value) {
+            this._data.buttonCaption = value;
+        }
         get tag() {
             return this._tag;
         }
@@ -168,6 +174,12 @@ define("@scom/page-form/index.css.ts", ["require", "exports", "@ijstech/componen
                     padding: input?.padding || '0.5rem 1rem',
                     fontStyle: input?.font?.style || 'inherit'
                 },
+                ".i-checkbox_label": {
+                    fontSize: input?.font?.size || Theme.typography.fontSize,
+                    fontStyle: input?.font?.style || 'inherit',
+                    color: input?.font?.color || Theme.input.fontColor,
+                    textTransform: "capitalize"
+                },
                 "> i-hstack": {
                     padding: '0 !important'
                 }
@@ -213,6 +225,12 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
         set title(value) {
             this.model.title = value;
         }
+        get buttonCaption() {
+            return this.model.buttonCaption;
+        }
+        set buttonCaption(value) {
+            this.model.buttonCaption = value;
+        }
         async setData(data) {
             await this.model.setData(data);
         }
@@ -220,7 +238,7 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             return this.model.getConfigurators();
         }
         onUpdateBlock() {
-            const { title: titleStyle, border, direction = 'vertical', maxWidth, margin, padding } = this.model.tag;
+            const { title: titleStyle, border, direction = 'vertical', maxWidth, margin, padding, button: buttonStyle } = this.model.tag;
             this.lblTitle.caption = this.model.title;
             this.lblTitle.font = titleStyle?.font || { weight: 600, size: Theme.typography.fontSize };
             if (border)
@@ -233,6 +251,14 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             this.maxWidth = maxWidth || '100%';
             this.pnlForm.direction = direction;
             this.btnSubmit.margin = direction === 'vertical' ? { top: '20px' } : { top: '0px' };
+            this.btnSubmit.caption = this.model.buttonCaption || 'Submit';
+            if (buttonStyle) {
+                for (let prop in buttonStyle) {
+                    if (buttonStyle.hasOwnProperty(prop)) {
+                        this.btnSubmit[prop] = buttonStyle[prop];
+                    }
+                }
+            }
             this.form.clearFormData();
             if (this.model.uiSchema)
                 this.form.uiSchema = this.model.uiSchema;
@@ -242,9 +268,6 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 columnWidth: '100%',
                 columnsPerRow: 1,
                 confirmButtonOptions: {
-                    caption: '$confirm',
-                    backgroundColor: Theme.colors.primary.main,
-                    fontColor: Theme.colors.primary.contrastText,
                     hide: true
                 },
                 dateTimeFormat: {
@@ -263,9 +286,6 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             value ? this.style.setProperty(name, value) : this.style.removeProperty(name);
         }
         onUpdateTheme() {
-            this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
-            this.updateStyle('--colors-primary-main', this.model.tag?.button?.background?.color);
-            this.updateStyle('--colors-primary-contrast_text', this.model.tag?.button?.font?.color);
             this.updateStyle('--input-background', this.model.tag?.input?.background?.color);
             this.updateStyle('--input-font_color', this.model.tag?.input?.font?.color);
             if (this.formStyle)
@@ -306,7 +326,8 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 const dataSchema = this.getAttribute('dataSchema', true);
                 const uiSchema = this.getAttribute('uiSchema', true);
                 const recaptchaKey = this.getAttribute('recaptchaKey', true);
-                await this.setData({ title, dataSchema, uiSchema, recaptchaKey });
+                const buttonCaption = this.getAttribute('buttonCaption', true);
+                await this.setData({ title, dataSchema, uiSchema, recaptchaKey, buttonCaption });
             }
             const tag = this.getAttribute('tag', true);
             if (tag)
@@ -317,9 +338,9 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 this.$render("i-label", { id: "lblTitle", font: { weight: 600 } }),
                 this.$render("i-stack", { id: "pnlForm", width: "100%" },
                     this.$render("i-form", { id: "form", width: "100%" }),
-                    this.$render("i-hstack", { verticalAlignment: 'center', gap: '1rem', horizontalAlignment: 'space-between' },
+                    this.$render("i-hstack", { verticalAlignment: 'end', gap: '1rem', horizontalAlignment: 'space-between', margin: { top: '1rem' } },
                         this.$render("i-panel", { id: "pnlRecaptcha" }),
-                        this.$render("i-button", { id: "btnSubmit", font: { weight: 600, color: Theme.colors.primary.contrastText }, background: { color: Theme.colors.primary.main }, padding: { top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem' }, caption: "Submit" })))));
+                        this.$render("i-button", { id: "btnSubmit", font: { weight: 600, color: Theme.colors.primary.contrastText }, background: { color: Theme.colors.primary.main }, padding: { top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem' }, boxShadow: 'none', caption: "Submit" })))));
         }
     };
     ScomPageForm = __decorate([

@@ -54,6 +54,14 @@ export class Model {
     this._data.recaptchaKey = value;
   }
 
+  get buttonCaption() {
+    return this._data.buttonCaption;
+  }
+
+  set buttonCaption(value: string) {
+    this._data.buttonCaption = value;
+  }
+
   get tag() {
     return this._tag;
   }

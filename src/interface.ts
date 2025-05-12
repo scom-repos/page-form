@@ -5,6 +5,7 @@ export interface IConfig {
   dataSchema: IDataSchema;
   uiSchema?: IUISchema;
   recaptchaKey?: string;
+  buttonCaption?: string;
 }
 
 interface IStyles {

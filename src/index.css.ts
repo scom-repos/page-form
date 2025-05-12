@@ -39,6 +39,12 @@ export const getFormStyle = (tag: ISettings) => {
         padding: input?.padding || '0.5rem 1rem',
         fontStyle: input?.font?.style || 'inherit'
       },
+      ".i-checkbox_label": {
+        fontSize: input?.font?.size || Theme.typography.fontSize,
+        fontStyle: input?.font?.style || 'inherit',
+        color: input?.font?.color || Theme.input.fontColor,
+        textTransform: "capitalize"
+      },
       "> i-hstack": {
         padding: '0 !important'
       }
