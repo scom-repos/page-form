@@ -121,6 +121,13 @@ export default class ScomPageForm extends Module {
     this.model.title = value;
   }
 
+  get buttonCaption() {
+    return this.model.buttonCaption;
+  }
+  set buttonCaption(value: string) {
+    this.model.buttonCaption = value;
+  }
+
   private async setData(data: IConfig) {
     await this.model.setData(data);
   }
@@ -136,7 +143,8 @@ export default class ScomPageForm extends Module {
       direction = 'vertical',
       maxWidth,
       margin,
-      padding
+      padding,
+      button: buttonStyle
     } = this.model.tag;
 
     this.lblTitle.caption = this.model.title;
@@ -149,6 +157,15 @@ export default class ScomPageForm extends Module {
     this.maxWidth = maxWidth || '100%';
     this.pnlForm.direction = direction;
     this.btnSubmit.margin = direction === 'vertical' ? {top: '20px'} : {top: '0px'};
+    this.btnSubmit.caption = this.model.buttonCaption || 'Submit';
+
+    if (buttonStyle) {
+      for (let prop in buttonStyle) {
+        if (buttonStyle.hasOwnProperty(prop)) {
+          this.btnSubmit[prop] = buttonStyle[prop];
+        }
+      }
+    }
 
     this.form.clearFormData();
     if (this.model.uiSchema)
@@ -159,9 +176,6 @@ export default class ScomPageForm extends Module {
         columnWidth: '100%',
         columnsPerRow: 1,
         confirmButtonOptions: {
-          caption: '$confirm',
-          backgroundColor: Theme.colors.primary.main,
-          fontColor: Theme.colors.primary.contrastText,
           hide: true
         },
         dateTimeFormat: {
@@ -183,9 +197,6 @@ export default class ScomPageForm extends Module {
   }
 
   private onUpdateTheme() {
-    this.updateStyle('--text-primary', this.model.tag?.title?.font?.color);
-    this.updateStyle('--colors-primary-main', this.model.tag?.button?.background?.color);
-    this.updateStyle('--colors-primary-contrast_text', this.model.tag?.button?.font?.color);
     this.updateStyle('--input-background', this.model.tag?.input?.background?.color);
     this.updateStyle('--input-font_color', this.model.tag?.input?.font?.color);
 
@@ -230,7 +241,8 @@ export default class ScomPageForm extends Module {
       const dataSchema = this.getAttribute('dataSchema', true);
       const uiSchema = this.getAttribute('uiSchema', true);
       const recaptchaKey = this.getAttribute('recaptchaKey', true);
-      await this.setData({ title, dataSchema, uiSchema, recaptchaKey });
+      const buttonCaption = this.getAttribute('buttonCaption', true);
+      await this.setData({ title, dataSchema, uiSchema, recaptchaKey, buttonCaption });
     }
 
     const tag = this.getAttribute('tag', true);
@@ -247,13 +259,14 @@ export default class ScomPageForm extends Module {
         <i-label id="lblTitle" font={{weight: 600}} />
         <i-stack id="pnlForm" width="100%">
           <i-form id="form" width="100%" />
-          <i-hstack verticalAlignment='center' gap={'1rem'} horizontalAlignment='space-between'>
+          <i-hstack verticalAlignment='end' gap={'1rem'} horizontalAlignment='space-between' margin={{top: '1rem'}}>
             <i-panel id="pnlRecaptcha" />
             <i-button
               id="btnSubmit"
               font={{weight: 600, color: Theme.colors.primary.contrastText}}
               background={{color: Theme.colors.primary.main}}
               padding={{top: '0.75rem', bottom: '0.75rem', left: '1.5rem', right: '1.5rem'}}
+              boxShadow='none'
               caption="Submit"
             />
           </i-hstack>
