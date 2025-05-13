@@ -99,7 +99,7 @@ declare module "@scom/page-form/index.css.ts" {
 /// <amd-module name="@scom/page-form" />
 declare module "@scom/page-form" {
     import { Module, ControlElement, Container, IDataSchema, IUISchema } from '@ijstech/components';
-    import { IConfig } from "@scom/page-form/interface.ts";
+    import { IConfig, ISettings } from "@scom/page-form/interface.ts";
     global {
         interface Window {
             grecaptcha: any;
@@ -140,7 +140,8 @@ declare module "@scom/page-form" {
         set title(value: string);
         get buttonCaption(): string;
         set buttonCaption(value: string);
-        private setData;
+        setData(data: IConfig): Promise<void>;
+        setTag(data: ISettings): void;
         getConfigurators(): ({
             name: string;
             target: string;
