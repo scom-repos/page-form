@@ -13,7 +13,7 @@ import {
   Panel,
   StackLayout
 } from '@ijstech/components';
-import { IConfig } from './interface';
+import { IConfig, ISettings } from './interface';
 import { Model } from './model/index';
 import { getFormStyle} from './index.css';
 
@@ -128,8 +128,12 @@ export default class ScomPageForm extends Module {
     this.model.buttonCaption = value;
   }
 
-  private async setData(data: IConfig) {
+  async setData(data: IConfig) {
     await this.model.setData(data);
+  }
+
+  setTag(data: ISettings) {
+    this.model.setTag(data);
   }
 
   getConfigurators() {

@@ -234,6 +234,9 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
         async setData(data) {
             await this.model.setData(data);
         }
+        setTag(data) {
+            this.model.setTag(data);
+        }
         getConfigurators() {
             return this.model.getConfigurators();
         }
