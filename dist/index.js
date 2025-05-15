@@ -382,10 +382,7 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             dataSchema: {
                 type: 'object',
                 properties: {
-                    title: {
-                        type: 'string',
-                        required: false
-                    },
+                    title: { type: 'string', required: false },
                     dataSchema: { type: 'object' },
                     uiSchema: { type: 'object', required: false },
                     recaptchaKey: { type: 'string', required: false },
