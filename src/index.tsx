@@ -27,10 +27,7 @@ declare global {
 
 interface ScomPageFormElement extends ControlElement {
   lazyLoad?: boolean;
-  title?: string;
-  dataSchema?: IDataSchema;
-  uiSchema?: IUISchema;
-  recaptchaKey?: string;
+  data?: IConfig;
 }
 
 declare global {
@@ -56,6 +53,9 @@ declare global {
     },
     recaptchaKey: {
       type: 'string'
+    },
+    buttonCaption: {
+      type: 'string'
     }
   },
   className: 'ScomPageForm',
@@ -63,12 +63,11 @@ declare global {
   dataSchema: {
     type: 'object',
     properties: {
-      title: {
-        type: 'string'
-      },
-      recaptchaKey: {
-        type: 'string'
-      }
+      title: { type: 'string', required: false },
+      dataSchema: { type: 'object' },
+      uiSchema: { type: 'object', required: false },
+      recaptchaKey: { type: 'string', required: false },
+      buttonCaption: { type: 'string', required: false }
     }
   }
 })
@@ -126,6 +125,14 @@ export default class ScomPageForm extends Module {
   }
   set buttonCaption(value: string) {
     this.model.buttonCaption = value;
+  }
+
+  get data() {
+    return this.model.data;
+  }
+
+  set data(value: IConfig) {
+    this.model.data = value;
   }
 
   async setData(data: IConfig) {
@@ -241,12 +248,8 @@ export default class ScomPageForm extends Module {
     });
     const lazyLoad = this.getAttribute('lazyLoad', true, false);
     if (!lazyLoad) {
-      const title = this.getAttribute('title', true);
-      const dataSchema = this.getAttribute('dataSchema', true);
-      const uiSchema = this.getAttribute('uiSchema', true);
-      const recaptchaKey = this.getAttribute('recaptchaKey', true);
-      const buttonCaption = this.getAttribute('buttonCaption', true);
-      await this.setData({ title, dataSchema, uiSchema, recaptchaKey, buttonCaption });
+      const data = this.getAttribute('data', true);
+      if (data) await this.setData(data);
     }
 
     const tag = this.getAttribute('tag', true);
