@@ -62,6 +62,15 @@ export class Model {
     this._data.buttonCaption = value;
   }
 
+  get data() {
+    return this._data;
+  }
+
+  set data(value: IConfig) {
+    this._data = value;
+    this._options?.onUpdateBlock();
+  }
+
   get tag() {
     return this._tag;
   }

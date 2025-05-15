@@ -59,6 +59,8 @@ declare module "@scom/page-form/model/index.ts" {
         set recaptchaKey(value: string);
         get buttonCaption(): string;
         set buttonCaption(value: string);
+        get data(): IConfig;
+        set data(value: IConfig);
         get tag(): ISettings;
         set tag(value: ISettings);
         private getData;
@@ -107,10 +109,7 @@ declare module "@scom/page-form" {
     }
     interface ScomPageFormElement extends ControlElement {
         lazyLoad?: boolean;
-        title?: string;
-        dataSchema?: IDataSchema;
-        uiSchema?: IUISchema;
-        recaptchaKey?: string;
+        data?: IConfig;
     }
     global {
         namespace JSX {
@@ -140,6 +139,8 @@ declare module "@scom/page-form" {
         set title(value: string);
         get buttonCaption(): string;
         set buttonCaption(value: string);
+        get data(): IConfig;
+        set data(value: IConfig);
         setData(data: IConfig): Promise<void>;
         setTag(data: ISettings): void;
         getConfigurators(): ({

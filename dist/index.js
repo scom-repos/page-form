@@ -55,6 +55,13 @@ define("@scom/page-form/model/index.ts", ["require", "exports"], function (requi
         set buttonCaption(value) {
             this._data.buttonCaption = value;
         }
+        get data() {
+            return this._data;
+        }
+        set data(value) {
+            this._data = value;
+            this._options?.onUpdateBlock();
+        }
         get tag() {
             return this._tag;
         }
@@ -231,6 +238,12 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
         set buttonCaption(value) {
             this.model.buttonCaption = value;
         }
+        get data() {
+            return this.model.data;
+        }
+        set data(value) {
+            this.model.data = value;
+        }
         async setData(data) {
             await this.model.setData(data);
         }
@@ -325,12 +338,9 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
             });
             const lazyLoad = this.getAttribute('lazyLoad', true, false);
             if (!lazyLoad) {
-                const title = this.getAttribute('title', true);
-                const dataSchema = this.getAttribute('dataSchema', true);
-                const uiSchema = this.getAttribute('uiSchema', true);
-                const recaptchaKey = this.getAttribute('recaptchaKey', true);
-                const buttonCaption = this.getAttribute('buttonCaption', true);
-                await this.setData({ title, dataSchema, uiSchema, recaptchaKey, buttonCaption });
+                const data = this.getAttribute('data', true);
+                if (data)
+                    await this.setData(data);
             }
             const tag = this.getAttribute('tag', true);
             if (tag)
@@ -362,6 +372,9 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 },
                 recaptchaKey: {
                     type: 'string'
+                },
+                buttonCaption: {
+                    type: 'string'
                 }
             },
             className: 'ScomPageForm',
@@ -370,11 +383,13 @@ define("@scom/page-form", ["require", "exports", "@ijstech/components", "@scom/p
                 type: 'object',
                 properties: {
                     title: {
-                        type: 'string'
+                        type: 'string',
+                        required: false
                     },
-                    recaptchaKey: {
-                        type: 'string'
-                    }
+                    dataSchema: { type: 'object' },
+                    uiSchema: { type: 'object', required: false },
+                    recaptchaKey: { type: 'string', required: false },
+                    buttonCaption: { type: 'string', required: false }
                 }
             }
         })
